@@ -76,7 +76,9 @@ def parse_planet_parameters(line, planet):
 
     **planet** — объект планеты.
     """
-    pass  # FIXME: допишите парсер
+    sp_line = line.split()
+    qwargs = {'R':sp_line[1], 'color':sp_line[2], 'm':sp_line[3], 'x':sp_line[4], 'y':sp_line[5], 'Vx':sp_line[6], 'Vy':sp_line[7]}
+    planet(**qwargs)
 
 def write_space_objects_data_to_file(output_filename, space_objects):
     """Сохраняет данные о космических объектах в файл.
