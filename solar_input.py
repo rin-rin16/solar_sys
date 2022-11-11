@@ -21,12 +21,10 @@ def read_space_objects_data_from_file(input_filename):
 
             object_type = line.split()[0].lower()
             if object_type == "star":
-                star = Star()
-                parse_star_parameters(line, star)
+                star = parse_star_parameters(line)
                 objects.append(star)
             elif object_type == "planet":
-                planet = Planet()
-                parse_planet_parameters(line, planet)
+                planet = parse_planet_parameters(line)
                 objects.append(planet)
             else:
                 print("Unknown space object")
@@ -34,7 +32,7 @@ def read_space_objects_data_from_file(input_filename):
     return [DrawableObject(obj) for obj in objects]
 
 
-def parse_star_parameters(line, star):
+def parse_star_parameters(line):
     """Считывает данные о звезде из строки.
 
     Входная строка должна иметь слеюущий формат:
@@ -53,12 +51,14 @@ def parse_star_parameters(line, star):
 
     **star** — объект звезды.
     """
+    
     sp_line = line.split()
     qwargs = {'R':sp_line[1], 'color':sp_line[2], 'm':sp_line[3], 'x':sp_line[4], 'y':sp_line[5], 'Vx':sp_line[6], 'Vy':sp_line[7]}
-    Star(**qwargs)
+    star = Star(**qwargs)
+    return (star)
 
 
-def parse_planet_parameters(line, planet):
+def parse_planet_parameters(line):
     """Считывает данные о планете из строки.
     Входная строка должна иметь слеюущий формат:
 
@@ -76,9 +76,11 @@ def parse_planet_parameters(line, planet):
 
     **planet** — объект планеты.
     """
+    
     sp_line = line.split()
     qwargs = {'R':sp_line[1], 'color':sp_line[2], 'm':sp_line[3], 'x':sp_line[4], 'y':sp_line[5], 'Vx':sp_line[6], 'Vy':sp_line[7]}
-    planet(**qwargs)
+    planet = Planet(**qwargs)
+    return (planet)
 
 def write_space_objects_data_to_file(output_filename, space_objects):
     """Сохраняет данные о космических объектах в файл.

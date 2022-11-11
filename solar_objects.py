@@ -39,13 +39,13 @@ class Star:
     """Цвет звезды"""
     
     def __init__(self, R, color, m, x, y, Vx, Vy):
-        self.R = R
+        self.R = int(R)
         self.color = color
-        self.m = m
-        self.x = x
-        self.y = y
-        self.Vx = Vx
-        self.Vy = Vy
+        self.m = float(m)
+        self.x = float(x)
+        self.y = float(y)
+        self.Vx = float(Vx)
+        self.Vy = float(Vy)
 
 class Planet:
     """Тип данных, описывающий планету.
@@ -82,3 +82,12 @@ class Planet:
 
     color = "green"
     """Цвет планеты"""
+
+    def __init__(self, R, color, m, x, y, Vx, Vy):
+        self.R = int(R)
+        self.color = color
+        self.m = float(m)
+        self.x = float(x)
+        self.y = float(y)
+        self.Vx = float(Vx)
+        self.Vy = float(Vy)
