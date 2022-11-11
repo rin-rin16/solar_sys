@@ -53,13 +53,11 @@ def parse_star_parameters(line, star):
 
     **star** — объект звезды.
     """
-    with open ("solar_system.txt", "r") as f:
-    lines = f.read().splitlines()
-    print (lines)
-    for line in lines:
-        if 'Star' in line.split():
-            print(line.split())
-            
+    sp_line = line.split()
+    qwargs = {'R':sp_line[1], 'color':sp_line[2], 'm':sp_line[3], 'x':sp_line[4], 'y':sp_line[5], 'Vx':sp_line[6], 'Vy':sp_line[7]}
+    star(**qwargs)
+
+
 def parse_planet_parameters(line, planet):
     """Считывает данные о планете из строки.
     Входная строка должна иметь слеюущий формат:
