@@ -57,7 +57,7 @@ def scale_y(y):
 
     **y** — y-координата модели.
     """
-    pass  # FIXME
+    return int(y*scale_factor) + window_height//2
 
 
 
