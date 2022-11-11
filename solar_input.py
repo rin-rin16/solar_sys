@@ -55,7 +55,7 @@ def parse_star_parameters(line, star):
     """
     sp_line = line.split()
     qwargs = {'R':sp_line[1], 'color':sp_line[2], 'm':sp_line[3], 'x':sp_line[4], 'y':sp_line[5], 'Vx':sp_line[6], 'Vy':sp_line[7]}
-    star(**qwargs)
+    Star(**qwargs)
 
 
 def parse_planet_parameters(line, planet):

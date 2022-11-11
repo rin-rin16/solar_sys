@@ -37,7 +37,15 @@ class Star:
 
     color = "red"
     """Цвет звезды"""
-
+    
+    def __init__(self, R, color, m, x, y, Vx, Vy):
+        self.R = R
+        self.color = color
+        self.m = m
+        self.x = x
+        self.y = y
+        self.Vx = Vx
+        self.Vy = Vy
 
 class Planet:
     """Тип данных, описывающий планету.
