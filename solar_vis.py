@@ -86,4 +86,4 @@ class DrawableObject:
 
     def draw(self, surface):
         """Рисует выбранный объект"""
-        pg.draw.circle(surface, self.color, (self.x, self.y), self.R)
+        pg.draw.circle(surface, self.obj.color, (self.obj.x, self.obj.y), self.obj.R)
