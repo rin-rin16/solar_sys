@@ -46,6 +46,8 @@ class Star:
         self.y = float(y)
         self.Vx = float(Vx)
         self.Vy = float(Vy)
+        
+
 
 class Planet:
     """Тип данных, описывающий планету.
@@ -91,3 +93,4 @@ class Planet:
         self.y = float(y)
         self.Vx = float(Vx)
         self.Vy = float(Vy)
+       

@@ -1,6 +1,8 @@
 # coding: utf-8
 # license: GPLv3
 
+import numpy as np
+
 gravitational_constant = 6.67408E-11
 """Гравитационная постоянная Ньютона G"""
 
@@ -21,8 +23,34 @@ def calculate_force(body, space_objects):
             continue  # тело не действует гравитационной силой на само себя!
         r = ((body.x - obj.x)**2 + (body.y - obj.y)**2)**0.5
         r = max(r, body.R) # FIXME: обработка аномалий при прохождении одного тела сквозь другое
-        pass  # FIXME: Взаимодействие объектов
-
+        F = (gravitational_constant * body.m * obj.m)/(r**2)
+        if body.x > obj.x and body.y > obj.y: # 1 четверть
+            alpha = np.arctan((body.x - obj.x)/(body.y - obj.y))
+            body.Fx+=(-F)*np.sin(alpha)
+            body.Fy+=(-F)*np.cos(alpha)
+        if body.x < obj.x and body.y > obj.y: # 2 четверть
+            alpha = np.arctan((obj.x - body.x)/(body.y - obj.y))
+            body.Fx+=F*np.sin(alpha)
+            body.Fy+=(-F)*np.cos(alpha)
+        if body.x < obj.x and body.y < obj.y: # 3 четверть
+            alpha = np.arctan((obj.x - body.x)/(obj.y - body.y))
+            body.Fx+=F*np.sin(alpha)
+            body.Fy+=F*np.cos(alpha)
+        if body.x > obj.x and body.y < obj.y: # 4 четверть
+            alpha = np.arctan((body.x - obj.x)/(obj.y - body.y))
+            body.Fx+=(-F)*np.sin(alpha)
+            body.Fy+=F*np.cos(alpha)
+        if body.x == obj.x:
+            if body.y > obj.y:
+                body.Fy+=(-F)
+            else:
+                body.Fy+=F
+        if body.y == obj.y:
+            if body.x > obj.x:
+                body.Fx+=(-F)
+            else:
+                body.Fx+=F
+    
 def move_space_object(body, dt):
     """Перемещает тело в соответствии с действующей на него силой.
 
@@ -30,14 +58,14 @@ def move_space_object(body, dt):
 
     **body** — тело, которое нужно переместить.
     """
-    old = body.x  # FIXME: Вывести формулы для ускорения, скоростей и координат
+
     ax = body.Fx/body.m
-    body.x += 24
-    ay = body.Fy*body.m
-    body.y = 42
-    body.Vy += 4*dt
-
-
+    body.Vx += ax * dt
+    body.x += body.Vx * dt
+    ay = body.Fy/body.m
+    body.Vy += ay * dt
+    body.y += body.Vy * dt
+    
 def recalculate_space_objects_positions(space_objects, dt):
     """Пересчитывает координаты объектов.
 
