@@ -49,8 +49,8 @@ class Star:
 
     def ret_kwargs(self):
         """Returns kwargs of stars"""
-        return {self.R : self.R, self.color : self.color, self.m : self.m, self.x : self.x,
-                self.y : self.y, self.Vx : self.Vx, self.Vy : self.Vy}
+        return {'R' : self.R, 'color' : self.color, 'm' : self.m, 'x' : self.x,
+                'y' : self.y, 'Vx' : self.Vx, 'Vy' : self.Vy}
 
 class Planet:
     """Тип данных, описывающий планету.
@@ -98,6 +98,6 @@ class Planet:
         self.Vy = float(Vy)
 
     def ret_kwargs(self):
-        """Returns kwargs of planets"""
-        return {self.R : self.R, self.color : self.color, self.m : self.m, self.x : self.x,
-                self.y : self.y, self.Vx : self.Vx, self.Vy : self.Vy}
+        """Returns kwargs of stars"""
+        return {'R' : self.R, 'color' : self.color, 'm' : self.m, 'x' : self.x,
+                'y' : self.y, 'Vx' : self.Vx, 'Vy' : self.Vy}
