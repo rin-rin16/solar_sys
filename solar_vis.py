@@ -14,7 +14,7 @@ header_font = "Arial-16"
 window_width = 900
 """Ширина окна"""
 
-window_height = 12
+window_height = 1200   # там было 12, но с 1200 оно вроде работает лучше
 """Высота окна"""
 
 scale_factor = 1
@@ -86,4 +86,4 @@ class DrawableObject:
 
     def draw(self, surface):
         """Рисует выбранный объект"""
-        pg.draw.circle(surface, self.obj.color, (self.obj.x, self.obj.y), self.obj.R)
+        pg.draw.circle(surface, self.obj.color, (scale_x(self.obj.x), scale_y(self.obj.y)), self.obj.R)
