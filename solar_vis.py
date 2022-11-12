@@ -82,8 +82,8 @@ class Drawer:
 
 class DrawableObject:
     def __init__(self, obj):
-        self.obj = obj
+        self.__dict__.update(**obj.ret_kwargs())
 
     def draw(self, surface):
         """Рисует выбранный объект"""
-        pg.draw.circle(surface, color, (x, y), R)
+        pg.draw.circle(surface, self.color, (self.x, self.y), self.R)
