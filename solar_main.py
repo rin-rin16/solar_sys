@@ -73,6 +73,17 @@ def open_file():
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects])
     calculate_scale_factor(max_distance)
 
+def write_file():
+    global space_objects
+    global browser
+    global model_time
+
+    model_time = 0.0
+    in_filename = "solar_system.txt"
+    out_filename = 'output.txt'
+    space_objects = read_space_objects_data_from_file(in_filename)
+    write_space_objects_data_to_file(out_filename, space_objects)
+
 def handle_events(events, menu):
     global alive
     for event in events:
@@ -97,13 +108,13 @@ def init_ui(screen):
     timer = thorpy.OneLineText("Seconds passed")
 
     button_load = thorpy.make_button(text="Load a file", func=open_file)
-    button_write = thorpy.make_button(text="Output file", func=write_space_objects_data_to_file(space_objects))
+    button_write = thorpy.make_button(text="Output file", func=write_file)
 
     box = thorpy.Box(elements=[
         slider,
         button_pause, 
         button_stop, 
-        button_play,
+        button_play, 
         button_load,
         button_write,
         timer])
