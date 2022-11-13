@@ -97,9 +97,8 @@ def write_space_objects_data_to_file(output_filename, space_objects):
 
     **space_objects** — список объектов планет и звёзд
     """
-    with open(output_filename, 'w') as out_file:
-        for obj in space_objects:
-            out_file.write(*obj)
+    with open(output_filename, 'a') as out_file:
+        out_file.write('Hello world!')
             
 
 
