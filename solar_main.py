@@ -74,7 +74,6 @@ def open_file():
     calculate_scale_factor(max_distance)
 
 def write_file():
-    space_objects = read_space_objects_data_from_file('solar_system.txt')
     write_space_objects_data_to_file('output.txt', space_objects)
 
 def handle_events(events, menu):
