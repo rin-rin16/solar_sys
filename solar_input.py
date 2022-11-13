@@ -99,7 +99,7 @@ def write_space_objects_data_to_file(output_filename, space_objects):
     """
     with open(output_filename, 'w') as out_file:
         for obj in space_objects:
-            print(obj, file=out_file)
+            print(str(obj.obj.type), str(obj.obj.R), str(obj.obj.color), str(obj.obj.m), str(obj.obj.x), str(obj.obj.y), str(obj.obj.Vx), str(obj.obj.Vy), file=out_file)
             
 
 
