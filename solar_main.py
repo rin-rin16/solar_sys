@@ -97,13 +97,13 @@ def init_ui(screen):
     timer = thorpy.OneLineText("Seconds passed")
 
     button_load = thorpy.make_button(text="Load a file", func=open_file)
-    button_write = thorpy.make_button(text="Output file", func=write_space_objects_data_to_file('output.txt', space_objects))
+    button_write = thorpy.make_button(text="Output file", func=write_space_objects_data_to_file(space_objects))
 
     box = thorpy.Box(elements=[
         slider,
         button_pause, 
         button_stop, 
-        button_play, 
+        button_play,
         button_load,
         button_write,
         timer])

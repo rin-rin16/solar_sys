@@ -3,6 +3,7 @@
 
 from solar_objects import Star, Planet
 from solar_vis import DrawableObject
+from solar_main import space_objects
 
 def read_space_objects_data_from_file(input_filename):
     """Cчитывает данные о космических объектах из файла, создаёт сами объекты
@@ -82,7 +83,7 @@ def parse_planet_parameters(line):
     planet = Planet(**qwargs)
     return (planet)
 
-def write_space_objects_data_to_file(output_filename, space_objects):
+def write_space_objects_data_to_file(space_objects):
     """Сохраняет данные о космических объектах в файл.
 
     Строки должны иметь следующий формат:
@@ -97,10 +98,13 @@ def write_space_objects_data_to_file(output_filename, space_objects):
 
     **space_objects** — список объектов планет и звёзд
     """
-    with open(output_filename, 'a') as out_file:
-        out_file.write('Hello world!')
-            
+    with open('output.txt', 'w') as out_file:
+        print(space_objects)
+
 
 
 if __name__ == "__main__":
     print("This module is not for direct call!")
+
+def te():
+    print('HI!')
