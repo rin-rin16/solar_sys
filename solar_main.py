@@ -97,6 +97,7 @@ def init_ui(screen):
     timer = thorpy.OneLineText("Seconds passed")
 
     button_load = thorpy.make_button(text="Load a file", func=open_file)
+    button_write = thorpy.make_button(text="Output file", func=write_space_objects_data_to_file('output.txt', space_objects))
 
     box = thorpy.Box(elements=[
         slider,
@@ -104,6 +105,7 @@ def init_ui(screen):
         button_stop, 
         button_play, 
         button_load,
+        button_write,
         timer])
     reaction1 = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
                                 reac_func=slider_reaction,
