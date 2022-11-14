@@ -74,15 +74,7 @@ def open_file():
     calculate_scale_factor(max_distance)
 
 def write_file():
-    global space_objects
-    global browser
-    global model_time
-
-    model_time = 0.0
-    in_filename = "solar_system.txt"
-    out_filename = 'output.txt'
-    space_objects = read_space_objects_data_from_file(in_filename)
-    write_space_objects_data_to_file(out_filename, space_objects)
+    write_space_objects_data_to_file('output.txt', space_objects)
 
 def handle_events(events, menu):
     global alive
