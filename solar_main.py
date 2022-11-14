@@ -14,9 +14,6 @@ timer = None
 
 alive = True
 
-perform_execution = False
-"""Флаг цикличности выполнения расчёта"""
-
 model_time = 0
 """Физическое время от начала расчёта.
 Тип: float"""
@@ -27,6 +24,49 @@ time_scale = 1000.0
 
 space_objects = []
 """Список космических объектов."""
+
+class NumVariables:
+    """Класс, в котором хранятся "глобальные" числовые переменные, использующиеся в main_py"""
+    def __init__(self):
+        self.count = 0
+
+    def adding(self, arg):
+        self.count += arg
+
+    def reading(self):
+       return self.count
+
+
+class BullVariables:
+    """Класс, в котором хранятся "глобальные" булевы переменные, использующиеся в main_py"""
+    def __init__(self):
+        self.bull = True
+
+    def bullTrue(self):
+        self.bull = True
+
+    def bullFalse(self):
+        self.bull = False
+
+    def read(self):
+        return self.bull
+
+
+class ListVariables:
+    """Класс, в котором хранятся "глобальные" переменные типа список, использующиеся в main_py"""
+
+    def __init__(self):
+        self.list = []
+
+    def transform(self, thelist):
+        self.list = thelist
+
+    def read(self):
+        return self.list
+
+
+perform_execution = BullVariables()     #Флаг цикличности выполнения расчёта             # Объявляю "глобальные" переменные
+
 
 def execution(delta):
     """Функция исполнения -- выполняется циклически, вызывая обработку всех небесных тел,
@@ -44,12 +84,13 @@ def start_execution():
     """Обработчик события нажатия на кнопку Start.
     Запускает циклическое исполнение функции execution.
     """
-    global perform_execution
-    perform_execution = True
+    perform_execution.bullTrue()
 
 def pause_execution():
-    global perform_execution
-    perform_execution = False
+    """Обработчик события нажатия на кнопку Pause.
+    Приостанавливает циклическое исполнение функции execution.
+    """
+    perform_execution.bullFalse()
 
 def stop_execution():
     """Обработчик события нажатия на кнопку Start.
@@ -137,7 +178,6 @@ def main():
     global time_speed
     global space
     global start_button
-    global perform_execution
     global timer
 
     print('Modelling started!')
@@ -151,12 +191,12 @@ def main():
     last_time = time.perf_counter()
     drawer = Drawer(screen)
     menu, box, timer = init_ui(screen)
-    perform_execution = True
+    perform_execution.bullTrue()
 
     while alive:
         handle_events(pg.event.get(), menu)
         cur_time = time.perf_counter()
-        if perform_execution:
+        if perform_execution.read():
             execution((cur_time - last_time) * time_scale)
             text = "%d seconds passed" % (int(model_time))
             timer.set_text(text)
