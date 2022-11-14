@@ -10,18 +10,6 @@ import thorpy
 import time
 import numpy as np
 
-alive = True
-
-model_time = 0
-"""Физическое время от начала расчёта.
-Тип: float"""
-
-time_scale = 1000.0
-"""Шаг по времени при моделировании.
-Тип: float"""
-
-space_objects = []
-"""Список космических объектов."""
 
 class NumVariables:
     """Класс, в котором хранятся "глобальные" числовые переменные, использующиеся в main_py"""
@@ -31,7 +19,10 @@ class NumVariables:
     def adding(self, arg):
         self.count += arg
 
-    def reading(self):
+    def setting(self, arg):
+        self.count = arg
+
+    def read(self):
        return self.count
 
 
@@ -63,8 +54,14 @@ class ListVariables:
         return self.list
 
 
-perform_execution = BullVariables()     #Флаг цикличности выполнения расчёта             # Объявляю "глобальные" переменные
+perform_execution = BullVariables()     # Флаг цикличности выполнения расчёта             # Объявляю "глобальные" переменные
+alive = BullVariables()                 # Отвечает за выход из симуляции
 
+time_scale = NumVariables()             # Шаг по времени при моделировании. Тип: float
+time_scale.setting(1000)
+model_time = NumVariables()             # Физическое время от начала расчёта. Тип: float
+
+space_objects = ListVariables()         # Список космических объектов
 
 def execution(delta):
     """Функция исполнения -- выполняется циклически, вызывая обработку всех небесных тел,
@@ -72,9 +69,8 @@ def execution(delta):
     Цикличность выполнения зависит от значения глобальной переменной perform_execution.
     При perform_execution == True функция запрашивает вызов самой себя по таймеру через от 1 мс до 100 мс.
     """
-    global model_time
-    recalculate_space_objects_positions([dr.obj for dr in space_objects], delta)
-    model_time += delta
+    recalculate_space_objects_positions([dr.obj for dr in space_objects.read()], delta)
+    model_time.adding(delta)
 
 
 def start_execution():
@@ -93,43 +89,36 @@ def stop_execution():
     """Обработчик события нажатия на кнопку Start.
     Останавливает циклическое исполнение функции execution.
     """
-    global alive
-    alive = False
+    alive.bullFalse()
 
 def open_file():
     """Открывает диалоговое окно выбора имени файла и вызывает
     функцию считывания параметров системы небесных тел из данного файла.
     Считанные объекты сохраняются в глобальный список space_objects
     """
-    global space_objects
-    global browser
-    global model_time
 
-    model_time = 0.0
+    model_time.setting(0)
     in_filename = "solar_system.txt"
-    space_objects = read_space_objects_data_from_file(in_filename)
-    max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects])
+    space_objects.transform(read_space_objects_data_from_file(in_filename))
+    max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects.read()])
     calculate_scale_factor(max_distance)
 
 def write_file():
-    write_space_objects_data_to_file('output.txt', space_objects)
+    write_space_objects_data_to_file('output.txt', space_objects.read())
 
 def handle_events(events, menu):
-    global alive
     for event in events:
         menu.react(event)
         if event.type == pg.QUIT:
-            alive = False
+            alive.bullFalse()
 
 def slider_to_real(val):
     return np.exp(5 + val)
 
 def slider_reaction(event):
-    global time_scale
-    time_scale = slider_to_real(event.el.get_value())
+    time_scale.setting(slider_to_real(event.el.get_value()))
 
 def init_ui(screen):
-    global browser
     slider = thorpy.SliderX(100, (-10, 10), "Simulation speed")
     slider.user_func = slider_reaction
     button_stop = thorpy.make_button("Quit", func=stop_execution)
@@ -181,16 +170,16 @@ def main():
     menu, box, timer = init_ui(screen)
     perform_execution.bullTrue()
 
-    while alive:
+    while alive.read():
         handle_events(pg.event.get(), menu)
         cur_time = time.perf_counter()
         if perform_execution.read():
-            execution((cur_time - last_time) * time_scale)
-            text = "%d seconds passed" % (int(model_time))
+            execution((cur_time - last_time) * time_scale.read())
+            text = "%d seconds passed" % (int(model_time.read()))
             timer.set_text(text)
 
         last_time = cur_time
-        drawer.update(space_objects, box)
+        drawer.update(space_objects.read(), box)
         time.sleep(1.0 / 60)
 
     print('Modelling finished!')
