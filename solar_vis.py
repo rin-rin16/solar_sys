@@ -17,19 +17,25 @@ window_width = 900
 window_height = 1200   # там было 12, но с 1200 оно вроде работает лучше
 """Высота окна"""
 
-scale_factor = 1
-"""Масштабирование экранных координат по отношению к физическим.
+class ScFac:
+    """Класс для "глобальной" числовой переменной, использующейся в solar_vis"""
+    def __init__(self):
+        self.fac = 1
 
-Тип: float
+    def setting(self, arg):
+        self.fac = arg
 
-Мера: количество пикселей на один метр."""
+    def read(self):
+        return self.fac
+
+
+scale_factor = ScFac()          # Масштабирование экранных координат по отношению к физическим. Тип: float. Мера: количество пикселей на один метр.
 
 
 def calculate_scale_factor(max_distance):
     """Вычисляет значение глобальной переменной **scale_factor** по данной характерной длине"""
-    global scale_factor
-    scale_factor = 0.5*min(window_height, window_width)/max_distance
-    print('Scale factor:', scale_factor)
+    scale_factor.setting(0.5*min(window_height, window_width)/max_distance)
+    print('Scale factor:', scale_factor.read())
 
 
 def scale_x(x):
@@ -43,7 +49,7 @@ def scale_x(x):
     **x** — x-координата модели.
     """
 
-    return int(x*scale_factor) + window_width//2
+    return int(x*scale_factor.read()) + window_width//2
 
 
 def scale_y(y):
@@ -57,7 +63,7 @@ def scale_y(y):
 
     **y** — y-координата модели.
     """
-    return int(-y*scale_factor) + window_height//2
+    return -int(y*scale_factor.read()) + window_height//2
 
 
 
