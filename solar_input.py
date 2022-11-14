@@ -53,7 +53,8 @@ def parse_star_parameters(line):
     """
     
     sp_line = line.split()
-    qwargs = {'R':sp_line[1], 'color':sp_line[2], 'm':sp_line[3], 'x':sp_line[4], 'y':sp_line[5], 'Vx':sp_line[6], 'Vy':sp_line[7]}
+    qwargs = {'R':sp_line[1], 'color':sp_line[2], 'm':sp_line[3], 'x':sp_line[4],
+              'y':sp_line[5], 'Vx':sp_line[6], 'Vy':sp_line[7]}
     star = Star(**qwargs)
     return (star)
 
@@ -78,7 +79,8 @@ def parse_planet_parameters(line):
     """
     
     sp_line = line.split()
-    qwargs = {'R':sp_line[1], 'color':sp_line[2], 'm':sp_line[3], 'x':sp_line[4], 'y':sp_line[5], 'Vx':sp_line[6], 'Vy':sp_line[7]}
+    qwargs = {'R':sp_line[1], 'color':sp_line[2], 'm':sp_line[3],
+              'x':sp_line[4], 'y':sp_line[5], 'Vx':sp_line[6], 'Vy':sp_line[7]}
     planet = Planet(**qwargs)
     return (planet)
 
@@ -99,7 +101,15 @@ def write_space_objects_data_to_file(output_filename, space_objects):
     """
     with open(output_filename, 'w') as out_file:
         for obj in space_objects:
-            print(str(obj.obj.type), str(obj.obj.R), str(obj.obj.color), str(obj.obj.m), str(obj.obj.x), str(obj.obj.y), str(obj.obj.Vx), str(obj.obj.Vy), file=out_file)
+            print(  "Тип объекта: ", str(obj.obj.type),
+                    "; Цвет: ", str(obj.obj.color),
+                    "; Радиус = ", str(obj.obj.R),
+                    "; Масса = ", str(obj.obj.m),
+                    "; Координата x = ", str(obj.obj.x),
+                    "; Координата y = ", str(obj.obj.y),
+                    "; Скорость по оси x =", str(obj.obj.Vx),
+                    "; Скорость по оси y =", str(obj.obj.Vy),
+                    file=out_file, sep="")
             
 
 
