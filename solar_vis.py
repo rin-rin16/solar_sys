@@ -49,7 +49,7 @@ def scale_x(x):
     **x** — x-координата модели.
     """
 
-    return int(x*scale_factor.read()) + window_width//2
+    return int(x*scale_factor.read()) + window_width//2 + 37
 
 
 def scale_y(y):
@@ -63,7 +63,7 @@ def scale_y(y):
 
     **y** — y-координата модели.
     """
-    return -int(y*scale_factor.read()) + window_height//2
+    return -int(y*scale_factor.read()) + window_height//2 - 150
 
 
 
