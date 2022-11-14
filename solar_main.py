@@ -10,8 +10,6 @@ import thorpy
 import time
 import numpy as np
 
-timer = None
-
 alive = True
 
 model_time = 0
@@ -75,7 +73,6 @@ def execution(delta):
     При perform_execution == True функция запрашивает вызов самой себя по таймеру через от 1 мс до 100 мс.
     """
     global model_time
-    global displayed_time
     recalculate_space_objects_positions([dr.obj for dr in space_objects], delta)
     model_time += delta
 
@@ -171,17 +168,8 @@ def main():
     """Главная функция главного модуля.
     Создаёт объекты графического дизайна библиотеки tkinter: окно, холст, фрейм с кнопками, кнопки.
     """
-    
-    global physical_time
-    global displayed_time
-    global time_step
-    global time_speed
-    global space
-    global start_button
-    global timer
 
     print('Modelling started!')
-    physical_time = 0
 
     pg.init()
     
