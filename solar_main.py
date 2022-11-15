@@ -201,6 +201,7 @@ def main():
         drawer.update(space_objects.read(), box)
         time.sleep(1.0 / 60)
 
+    V_t_plot(t_list, Vxp_list, Vyp_list)
     dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list)
     V_dist_plot(xs_list, ys_list, xp_list, yp_list, Vxp_list, Vyp_list)
     print('Modelling finished!')

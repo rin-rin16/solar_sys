@@ -43,6 +43,16 @@ def output_statistics(t_list, xs_list, ys_list, Vxs_list, Vys_list, xp_list, yp_
               "Vy: ", Vyp_list.read(),
               file=stat_file)
 
+def V_t_plot(t_list, Vxp_list, Vyp_list):
+    V_list = []
+    for i in range(len(t_list.read())):
+        V_list.append(np.sqrt(Vxp_list.read()[i]**2 +Vyp_list.read()[i]**2))
+    plt.plot(t_list.read(), V_list)
+    plt.xlabel("t, s")
+    plt.ylabel("Speed, m/s")
+    plt.title("Speed vs Time")
+    plt.show()
+
 def dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list):
     dist_list = []
     for i in range(len(t_list.read())):
