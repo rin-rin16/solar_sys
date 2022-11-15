@@ -6,47 +6,9 @@ from solar_vis import *
 from solar_model import *
 from solar_input import *
 from solar_objects import *
+from solar_stats import *
 import thorpy
 import time
-import numpy as np
-
-def save_statistics(time):
-    """Сохраняет статистику данных о космических объектах в виде списков.
-
-    Параметры:
-
-    **time** -- момент времени сбора статистики
-    """
-    for obj in space_objects.read():
-        if obj.obj.type == "Star":
-            t_list.appending(time)
-            xs_list.appending(obj.obj.x)
-            ys_list.appending(obj.obj.y)
-            Vxs_list.appending(obj.obj.Vx)
-            Vys_list.appending(obj.obj.Vy)
-        if obj.obj.type == "Planet":
-            xp_list.appending(obj.obj.x)
-            yp_list.appending(obj.obj.y)
-            Vxp_list.appending(obj.obj.Vx)
-            Vyp_list.appending(obj.obj.Vy)
-
-
-def output_statistics():
-    """Выводит сохранённую статистику о спутнике и звезде"""
-    with open("stats.txt", "w") as stat_file:
-        print("Время : ", t_list.read(), "\n\n\n"                                 
-              "Звезда: \n\n",
-              "X: ", xs_list.read(), "\n\n",
-              "Y: ", ys_list.read(), "\n\n",
-              "Vx: ", Vxs_list.read(), "\n\n",
-              "Vy: ", Vys_list.read(), "\n\n\n"
-              "Планета: \n\n",
-              "X: ", xp_list.read(), "\n\n",
-              "Y: ", yp_list.read(), "\n\n",
-              "Vx: ", Vxp_list.read(), "\n\n",
-              "Vy: ", Vyp_list.read(),
-              file=stat_file)
-
 
 class NumVariables:
     """Класс, в котором хранятся "глобальные" числовые переменные, использующиеся в main_py"""
@@ -152,7 +114,12 @@ def open_file():
     calculate_scale_factor(max_distance)
 
 def write_file():
+    """Применяет функцию, выводящую координаты, с выбранными параметрами"""
     write_space_objects_data_to_file('output.txt', space_objects.read())
+
+def out_stat():
+    """Применяет функцию, выводящую статистику, с выбранными параметрами"""
+    output_statistics(t_list, xs_list, ys_list, Vxs_list, Vys_list, xp_list, yp_list, Vxp_list, Vyp_list)
 
 def handle_events(events, menu):
     for event in events:
@@ -176,7 +143,7 @@ def init_ui(screen):
 
     button_load = thorpy.make_button(text="Load a file", func=open_file)
     button_write = thorpy.make_button(text="Output file", func=write_file)
-    button_statistics = thorpy.make_button(text="Statistics", func=output_statistics)
+    button_statistics = thorpy.make_button(text="Statistics", func=out_stat)
 
     box = thorpy.Box(elements=[
         slider,
@@ -227,12 +194,14 @@ def main():
             execution((cur_time - last_time) * time_scale.read())
             text = "%d seconds passed" % (int(model_time.read()))
             timer.set_text(text)
-            save_statistics(model_time.read())
+            save_statistics(model_time.read(), t_list, xs_list, ys_list, Vxs_list, Vys_list,
+                            xp_list, yp_list, Vxp_list, Vyp_list, space_objects)
 
         last_time = cur_time
         drawer.update(space_objects.read(), box)
         time.sleep(1.0 / 60)
 
+    dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list)
     print('Modelling finished!')
 
 if __name__ == "__main__":
