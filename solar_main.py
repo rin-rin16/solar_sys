@@ -10,6 +10,45 @@ import thorpy
 import time
 import numpy as np
 
+def save_statistics(time):
+    """Сохраняет статистику данных о космических объектах в виде списков.
+
+    Параметры:
+
+    **time** -- момент времени сбора статистики
+    """
+
+    if True:# time % 10000 == 0:  # Сохраняем данные каждую 10000-ю секунду симуляции
+        for obj in space_objects.read():
+            if obj.obj.type == "Star":
+                t_list.appending(time)
+                xs_list.appending(obj.obj.x)
+                ys_list.appending(obj.obj.y)
+                Vxs_list.appending(obj.obj.Vx)
+                Vys_list.appending(obj.obj.Vy)
+            if obj.obj.type == "Planet":
+                xp_list.appending(obj.obj.x)
+                yp_list.appending(obj.obj.y)
+                Vxp_list.appending(obj.obj.Vx)
+                Vyp_list.appending(obj.obj.Vy)
+
+
+def output_statistics():
+    """Выводит сохранённую статистику о спутнике и звезде"""
+    with open("stats.txt", "w") as stat_file:
+        print("Время : ", t_list.read(), "\n\n\n"                                 
+              "Звезда: \n\n",
+              "X: ", xs_list.read(), "\n\n",
+              "Y: ", ys_list.read(), "\n\n",
+              "Vx: ", Vxs_list.read(), "\n\n",
+              "Vy: ", Vys_list.read(), "\n\n\n"
+              "Планета: \n\n",
+              "X: ", xp_list.read(), "\n\n",
+              "Y: ", yp_list.read(), "\n\n",
+              "Vx: ", Vxp_list.read(), "\n\n",
+              "Vy: ", Vyp_list.read(),
+              file=stat_file)
+
 
 class NumVariables:
     """Класс, в котором хранятся "глобальные" числовые переменные, использующиеся в main_py"""
@@ -50,6 +89,9 @@ class ListVariables:
     def transform(self, thelist):
         self.list = thelist
 
+    def appending(self, el):
+        self.list.append(el)
+
     def read(self):
         return self.list
 
@@ -62,6 +104,15 @@ time_scale.setting(1000)
 model_time = NumVariables()             # Физическое время от начала расчёта. Тип: float
 
 space_objects = ListVariables()         # Список космических объектов
+t_list = ListVariables()                # Переменные для сохранения статистики данных
+xs_list = ListVariables()
+ys_list = ListVariables()
+Vxs_list = ListVariables()
+Vys_list = ListVariables()
+xp_list = ListVariables()
+yp_list = ListVariables()
+Vxp_list = ListVariables()
+Vyp_list = ListVariables()
 
 def execution(delta):
     """Функция исполнения -- выполняется циклически, вызывая обработку всех небесных тел,
@@ -96,9 +147,8 @@ def open_file():
     функцию считывания параметров системы небесных тел из данного файла.
     Считанные объекты сохраняются в глобальный список space_objects
     """
-
     model_time.setting(0)
-    in_filename = "solar_system.txt"
+    in_filename = "one_satellite.txt"
     space_objects.transform(read_space_objects_data_from_file(in_filename))
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects.read()])
     calculate_scale_factor(max_distance)
@@ -128,6 +178,7 @@ def init_ui(screen):
 
     button_load = thorpy.make_button(text="Load a file", func=open_file)
     button_write = thorpy.make_button(text="Output file", func=write_file)
+    button_statistics = thorpy.make_button(text="Statistics", func=output_statistics)
 
     box = thorpy.Box(elements=[
         slider,
@@ -136,6 +187,7 @@ def init_ui(screen):
         button_play, 
         button_load,
         button_write,
+        button_statistics,
         timer])
     reaction1 = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
                                 reac_func=slider_reaction,
@@ -177,6 +229,7 @@ def main():
             execution((cur_time - last_time) * time_scale.read())
             text = "%d seconds passed" % (int(model_time.read()))
             timer.set_text(text)
+            save_statistics(model_time.read())
 
         last_time = cur_time
         drawer.update(space_objects.read(), box)

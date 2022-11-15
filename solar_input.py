@@ -87,15 +87,9 @@ def parse_planet_parameters(line):
 def write_space_objects_data_to_file(output_filename, space_objects):
     """Сохраняет данные о космических объектах в файл.
 
-    Строки должны иметь следующий формат:
-
-    Star <радиус в пикселах> <цвет> <масса> <x> <y> <Vx> <Vy>
-
-    Planet <радиус в пикселах> <цвет> <масса> <x> <y> <Vx> <Vy>
-
     Параметры:
 
-    **output_filename** — имя входного файла
+    **output_filename** — имя файла
 
     **space_objects** — список объектов планет и звёзд
     """
@@ -110,8 +104,6 @@ def write_space_objects_data_to_file(output_filename, space_objects):
                     "; Скорость по оси x =", str(obj.obj.Vx),
                     "; Скорость по оси y =", str(obj.obj.Vy),
                     file=out_file, sep="")
-            
-
 
 if __name__ == "__main__":
     print("This module is not for direct call!")
