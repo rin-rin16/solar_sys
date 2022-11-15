@@ -17,20 +17,18 @@ def save_statistics(time):
 
     **time** -- момент времени сбора статистики
     """
-
-    if True:# time % 10000 == 0:  # Сохраняем данные каждую 10000-ю секунду симуляции
-        for obj in space_objects.read():
-            if obj.obj.type == "Star":
-                t_list.appending(time)
-                xs_list.appending(obj.obj.x)
-                ys_list.appending(obj.obj.y)
-                Vxs_list.appending(obj.obj.Vx)
-                Vys_list.appending(obj.obj.Vy)
-            if obj.obj.type == "Planet":
-                xp_list.appending(obj.obj.x)
-                yp_list.appending(obj.obj.y)
-                Vxp_list.appending(obj.obj.Vx)
-                Vyp_list.appending(obj.obj.Vy)
+    for obj in space_objects.read():
+        if obj.obj.type == "Star":
+            t_list.appending(time)
+            xs_list.appending(obj.obj.x)
+            ys_list.appending(obj.obj.y)
+            Vxs_list.appending(obj.obj.Vx)
+            Vys_list.appending(obj.obj.Vy)
+        if obj.obj.type == "Planet":
+            xp_list.appending(obj.obj.x)
+            yp_list.appending(obj.obj.y)
+            Vxp_list.appending(obj.obj.Vx)
+            Vyp_list.appending(obj.obj.Vy)
 
 
 def output_statistics():
