@@ -29,7 +29,7 @@ def output_statistics(t_list, xs_list, ys_list, Vxs_list, Vys_list, xp_list, yp_
 
     Все списки, содержащие статистику
     """
-    with open("stats.txt", "w") as stat_file:
+    with open("../stats.txt", "w") as stat_file:
         print("Время: ", t_list.read(), "\n\n\n"                                 
               "Звезда: \n\n",
               "X: ", xs_list.read(), "\n\n",
@@ -76,3 +76,6 @@ def V_dist_plot(xs_list, ys_list, xp_list, yp_list, Vxp_list, Vyp_list):
     plt.ylabel("Speed, m/s")
     plt.title("Speed vs Distance")
     plt.show()
+
+if __name__ == "__main__":
+    print("This module is not for direct call!")

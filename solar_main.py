@@ -1,12 +1,10 @@
 # coding: utf-8
 # license: GPLv3
 
-import pygame as pg
-from solar_vis import *
-from solar_model import *
-from solar_input import *
-from solar_objects import *
-from solar_stats import *
+from source_code.solar_vis import *
+from source_code.solar_model import *
+from source_code.solar_input import *
+from source_code.solar_stats import *
 import thorpy
 import time
 
@@ -108,7 +106,7 @@ def open_file():
     Считанные объекты сохраняются в глобальный список space_objects
     """
     model_time.setting(0)
-    in_filename = "one_satellite.txt"
+    in_filename = "systems/one_satellite.txt"
     space_objects.transform(read_space_objects_data_from_file(in_filename))
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects.read()])
     calculate_scale_factor(max_distance)
