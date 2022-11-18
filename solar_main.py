@@ -40,7 +40,7 @@ class BullVariables:
 
 
 class ListVariables:
-    """Класс, в котором хранятся "глобальные" переменные типа список, использующиеся в main_py"""
+    """Класс, в котором хранятся "глобальные" переменные типа list, использующиеся в main_py"""
 
     def __init__(self):
         self.list = []
@@ -54,13 +54,23 @@ class ListVariables:
     def getter(self):
         return self.list
 
+class StringVariables():
+    """Класс, в котором хранятся "глобальные" переменные типа string, использующиеся в main_py"""
+    def __init__(self):
+        self.str = ""
+
+    def setter(self, arg):
+        self.str = str(arg)
+
+    def getter(self):
+        return self.str
+
 
 perform_execution = BullVariables()     # Флаг цикличности выполнения расчёта             # Объявляю "глобальные" переменные
 alive = BullVariables()                 # Отвечает за выход из симуляции
 
 time_scale = NumVariables()             # Шаг по времени при моделировании. Тип: float
 time_scale.setter(1000)
-File_Number = NumVariables()            # Номер файла, из которого будут браться данные о космических объектах
 model_time = NumVariables()             # Физическое время от начала расчёта. Тип: float
 
 space_objects = ListVariables()         # Список космических объектов
@@ -74,16 +84,18 @@ yp_list = ListVariables()
 Vxp_list = ListVariables()
 Vyp_list = ListVariables()
 
+File_Name = StringVariables()
+
 def sol_sys_init():
-    File_Number.setter(0)
+    File_Name.setter("systems/solar_system.txt")
     perform_execution.bullFalse()
 
 def double_star_init():
-    File_Number.setter(1)
+    File_Name.setter("systems/double_star.txt")
     perform_execution.bullFalse()
 
 def one_sat_init():
-    File_Number.setter(2)
+    File_Name.setter("systems/one_satellite.txt")
     perform_execution.bullFalse()
 
 def execution(delta):
@@ -114,13 +126,13 @@ def stop_execution():
     """
     alive.bullFalse()
 
-def open_file():
+def open_file(File_Name):
     """Открывает диалоговое окно выбора имени файла и вызывает
     функцию считывания параметров системы небесных тел из данного файла.
     Считанные объекты сохраняются в глобальный список space_objects
     """
     model_time.setter(0)
-    in_filename = "systems/one_satellite.txt"
+    in_filename = File_Name.getter()
     space_objects.transform(input.read_space_objects_data_from_file(in_filename))
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects.getter()])
     vis.calculate_scale_factor(max_distance)
@@ -172,19 +184,29 @@ def init_ui(screen):
     button_play = thorpy.make_button("Play", func=start_execution)
     timer = thorpy.OneLineText("Seconds passed")
 
-    button_load = thorpy.make_button(text="Load a file", func=open_file)
+    button_load = thorpy.make_button(text="Load a file", func=open_file, params={"File_Name": File_Name})
     button_write = thorpy.make_button(text="Output file", func=write_file)
     button_statistics = thorpy.make_button(text="Statistics", func=out_stat)
 
-    box = thorpy.Box(elements=[
-        slider,
-        button_pause, 
-        button_stop, 
-        button_play, 
-        button_load,
-        button_write,
-        button_statistics,
-        timer])
+    if File_Name.getter() == "systems/one_satellite.txt":
+        box = thorpy.Box(elements=[
+            slider,
+            button_pause,
+            button_stop,
+            button_play,
+            button_load,
+            button_write,
+            button_statistics,
+            timer])
+    else:
+        box = thorpy.Box(elements=[
+            slider,
+            button_pause,
+            button_stop,
+            button_play,
+            button_load,
+            timer])
+
     reaction1 = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
                                 reac_func=slider_reaction,
                                 event_args={"id":thorpy.constants.EVENT_SLIDE},
@@ -234,16 +256,19 @@ def main():
             execution((cur_time - last_time) * time_scale.getter())
             text = "%d seconds passed" % (int(model_time.getter()))
             timer.set_text(text)
-            stats.save_statistics(model_time.getter(), t_list, xs_list, ys_list, Vxs_list, Vys_list,
-                            xp_list, yp_list, Vxp_list, Vyp_list, space_objects)
+            if File_Name.getter() == "systems/one_satellite.txt":
+                stats.save_statistics(model_time.getter(), t_list, xs_list, ys_list, Vxs_list, Vys_list,
+                                xp_list, yp_list, Vxp_list, Vyp_list, space_objects)
 
         last_time = cur_time
         drawer.update(space_objects.getter(), box)
         time.sleep(1.0 / 60)
 
-    stats.V_t_plot(t_list, Vxp_list, Vyp_list)
-    stats.dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list)
-    stats.V_dist_plot(xs_list, ys_list, xp_list, yp_list, Vxp_list, Vyp_list)
+    if File_Name.getter() == "systems/one_satellite.txt":
+        stats.V_t_plot(t_list, Vxp_list, Vyp_list)
+        stats.dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list)
+        stats.V_dist_plot(xs_list, ys_list, xp_list, yp_list, Vxp_list, Vyp_list)
+
     print('Modelling finished!')
 
 if __name__ == "__main__":
