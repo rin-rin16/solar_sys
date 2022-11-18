@@ -267,6 +267,19 @@ def main():
             drawer.update(space_objects.getter(), box)
             time.sleep(1.0 / 60)
 
+    elif File_Name.getter() == "systems/double_star.txt":
+        while alive.getter():
+            handle_events(vis.pg.event.get(), menu)
+            cur_time = time.perf_counter()
+            if perform_execution.getter():
+                execution((cur_time - last_time) * time_scale.getter()/15)
+                text = "%d seconds passed" % (int(model_time.getter()))
+                timer.set_text(text)
+
+            last_time = cur_time
+            drawer.update(space_objects.getter(), box)
+            time.sleep(1.0 / 60)
+
     else:
         while alive.getter():
             handle_events(vis.pg.event.get(), menu)

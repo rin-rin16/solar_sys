@@ -30,10 +30,10 @@ def output_statistics(t_list, xs_list, ys_list, Vxs_list, Vys_list, xp_list, yp_
 
     Все списки, содержащие статистику
     """
-    data = {"Time" : t_list.getter(), "Star: X" : xs_list.getter(), "Star: Y" : ys_list.getter(),
-            "Star: Vx" : Vxs_list.getter(), "Star: Vy" : Vys_list.getter(),
-            "Planet: X" : xp_list.getter(), "Planet: Y" : yp_list.getter(),
-            "Planet: Vx" : Vxp_list.getter(), "Planet: Vy" : Vyp_list.getter()}
+    data = {"Time": t_list.getter(), "Star: X": xs_list.getter(), "Star: Y": ys_list.getter(),
+            "Star: Vx": Vxs_list.getter(), "Star: Vy": Vys_list.getter(),
+            "Planet: X": xp_list.getter(), "Planet: Y": yp_list.getter(),
+            "Planet: Vx": Vxp_list.getter(), "Planet: Vy": Vyp_list.getter()}
 
     pd.DataFrame(data).to_csv("output/system_stats.csv", index=False)
 
