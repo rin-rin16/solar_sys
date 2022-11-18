@@ -84,17 +84,20 @@ yp_list = ListVariables()
 Vxp_list = ListVariables()
 Vyp_list = ListVariables()
 
-File_Name = StringVariables()
+File_Name = StringVariables()           # Имя файла, который будет моделироваться
 
 def sol_sys_init():
+    """Запускает файл солнеченой системы"""
     File_Name.setter("systems/solar_system.txt")
     perform_execution.bullFalse()
 
 def double_star_init():
+    """Запускает файл двойной звезды"""
     File_Name.setter("systems/double_star.txt")
     perform_execution.bullFalse()
 
 def one_sat_init():
+    """Запускает файл одного спутника"""
     File_Name.setter("systems/one_satellite.txt")
     perform_execution.bullFalse()
 
@@ -198,7 +201,7 @@ def init_ui(screen):
             button_write,
             button_statistics,
             timer])
-    else:
+    else:                               # Убирает из меню не работающие кнопки для систем, не являющихся одиночным спутником
         box = thorpy.Box(elements=[
             slider,
             button_pause,
@@ -249,22 +252,35 @@ def main():
     menu, box, timer = init_ui(screen)
     perform_execution.bullTrue()
 
-    while alive.getter():
-        handle_events(vis.pg.event.get(), menu)
-        cur_time = time.perf_counter()
-        if perform_execution.getter():
-            execution((cur_time - last_time) * time_scale.getter())
-            text = "%d seconds passed" % (int(model_time.getter()))
-            timer.set_text(text)
-            if File_Name.getter() == "systems/one_satellite.txt":
+    if File_Name.getter() == "systems/one_satellite.txt":  # Собираем статистику только для одиночного спутника
+        while alive.getter():
+            handle_events(vis.pg.event.get(), menu)
+            cur_time = time.perf_counter()
+            if perform_execution.getter():
+                execution((cur_time - last_time) * time_scale.getter())
+                text = "%d seconds passed" % (int(model_time.getter()))
+                timer.set_text(text)
                 stats.save_statistics(model_time.getter(), t_list, xs_list, ys_list, Vxs_list, Vys_list,
-                                xp_list, yp_list, Vxp_list, Vyp_list, space_objects)
+                                      xp_list, yp_list, Vxp_list, Vyp_list, space_objects)
 
-        last_time = cur_time
-        drawer.update(space_objects.getter(), box)
-        time.sleep(1.0 / 60)
+            last_time = cur_time
+            drawer.update(space_objects.getter(), box)
+            time.sleep(1.0 / 60)
 
-    if File_Name.getter() == "systems/one_satellite.txt":
+    else:
+        while alive.getter():
+            handle_events(vis.pg.event.get(), menu)
+            cur_time = time.perf_counter()
+            if perform_execution.getter():
+                execution((cur_time - last_time) * time_scale.getter())
+                text = "%d seconds passed" % (int(model_time.getter()))
+                timer.set_text(text)
+
+            last_time = cur_time
+            drawer.update(space_objects.getter(), box)
+            time.sleep(1.0 / 60)
+
+    if File_Name.getter() == "systems/one_satellite.txt":  # Выводим графики только для одиночного спутника
         stats.V_t_plot(t_list, Vxp_list, Vyp_list)
         stats.dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list)
         stats.V_dist_plot(xs_list, ys_list, xp_list, yp_list, Vxp_list, Vyp_list)
