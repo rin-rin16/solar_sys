@@ -45,6 +45,7 @@ def V_t_plot(t_list, Vxp_list, Vyp_list):
     plt.xlabel("t, s")
     plt.ylabel("Speed, m/s")
     plt.title("Speed vs Time")
+    plt.grid()
     plt.show()
 
 def dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list):
@@ -56,6 +57,7 @@ def dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list):
     plt.xlabel("t, s")
     plt.ylabel("Distance, m")
     plt.title("Distance vs Time")
+    plt.grid()
     plt.show()
 
 def V_dist_plot(xs_list, ys_list, xp_list, yp_list, Vxp_list, Vyp_list):
@@ -69,6 +71,7 @@ def V_dist_plot(xs_list, ys_list, xp_list, yp_list, Vxp_list, Vyp_list):
     plt.xlabel("Distance, m")
     plt.ylabel("Speed, m/s")
     plt.title("Speed vs Distance")
+    plt.grid()
     plt.show()
 
 if __name__ == "__main__":

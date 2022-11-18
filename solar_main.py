@@ -60,6 +60,7 @@ alive = BullVariables()                 # Отвечает за выход из 
 
 time_scale = NumVariables()             # Шаг по времени при моделировании. Тип: float
 time_scale.setter(1000)
+File_Number = NumVariables()            # Номер файла, из которого будут браться данные о космических объектах
 model_time = NumVariables()             # Физическое время от начала расчёта. Тип: float
 
 space_objects = ListVariables()         # Список космических объектов
@@ -72,6 +73,18 @@ xp_list = ListVariables()
 yp_list = ListVariables()
 Vxp_list = ListVariables()
 Vyp_list = ListVariables()
+
+def sol_sys_init():
+    File_Number.setter(0)
+    perform_execution.bullFalse()
+
+def double_star_init():
+    File_Number.setter(1)
+    perform_execution.bullFalse()
+
+def one_sat_init():
+    File_Number.setter(2)
+    perform_execution.bullFalse()
 
 def execution(delta):
     """Функция исполнения -- выполняется циклически, вызывая обработку всех небесных тел,
@@ -132,6 +145,25 @@ def slider_to_real(val):
 def slider_reaction(event):
     time_scale.setter(slider_to_real(event.el.get_value()))
 
+def start_ui(screen):
+    button_solar_sys = thorpy.make_button("Solar system", func=sol_sys_init)
+    button_double_star = thorpy.make_button("Double star", func=double_star_init)
+    button_one_sattelite = thorpy.make_button("One satellite", func=one_sat_init)
+
+    box = thorpy.Box(elements=[
+        button_solar_sys,
+        button_double_star,
+        button_one_sattelite])
+
+    menu = thorpy.Menu(box)
+    for element in menu.get_population():
+        element.surface = screen
+
+    box.set_topleft((vis.window_width//2 - 25, vis.window_height//2 - 225))
+    box.blit()
+    box.update()
+    return menu, box
+
 def init_ui(screen):
     slider = thorpy.SliderX(100, (-10, 10), "Simulation speed")
     slider.user_func = slider_reaction
@@ -181,6 +213,15 @@ def main():
     width = 1000
     height = 900
     screen = vis.pg.display.set_mode((width, height))
+
+    perform_execution.bullTrue()
+    drawer = vis.Drawer(screen)
+    menu, box = start_ui(screen)
+
+    while perform_execution.getter():
+        handle_events(vis.pg.event.get(), menu)
+        drawer.update(space_objects.getter(), box)
+
     last_time = time.perf_counter()
     drawer = vis.Drawer(screen)
     menu, box, timer = init_ui(screen)
@@ -203,8 +244,6 @@ def main():
     stats.V_t_plot(t_list, Vxp_list, Vyp_list)
     stats.dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list)
     stats.V_dist_plot(xs_list, ys_list, xp_list, yp_list, Vxp_list, Vyp_list)
-    with open("output/system_stats.csv", "r") as st_f:
-        print(st_f.read())
     print('Modelling finished!')
 
 if __name__ == "__main__":
