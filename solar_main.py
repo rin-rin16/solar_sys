@@ -264,33 +264,20 @@ def main():
     menu, box, timer = init_ui(screen)
     perform_execution.bullTrue()
 
-    if File_Name.getter() == "systems/one_satellite.txt":  # Собираем статистику только для одиночного спутника
-        while alive.getter():
-            handle_events(vis.pg.event.get(), menu)
-            cur_time = time.perf_counter()
-            if perform_execution.getter():
-                execution((cur_time - last_time) * time_scale.getter())
-                text = "%d seconds passed" % (int(model_time.getter()))
-                timer.set_text(text)
+    while alive.getter():
+        handle_events(vis.pg.event.get(), menu)
+        cur_time = time.perf_counter()
+        if perform_execution.getter():
+            execution((cur_time - last_time) * time_scale.getter() / Time_Factor(File_Name))    # Уменьшаем максимальную скорость симуляции для
+            text = "%d seconds passed" % (int(model_time.getter()))                             # двойной звезды
+            timer.set_text(text)
+            if File_Name.getter() == "systems/one_satellite.txt":       # Собираем статистику только для одиночного спутника
                 stats.save_statistics(model_time.getter(), t_list, xs_list, ys_list, Vxs_list, Vys_list,
                                       xp_list, yp_list, Vxp_list, Vyp_list, space_objects)
 
-            last_time = cur_time
-            drawer.update(space_objects.getter(), box)
-            time.sleep(1.0 / 60)
-
-    else:
-        while alive.getter():
-            handle_events(vis.pg.event.get(), menu)
-            cur_time = time.perf_counter()
-            if perform_execution.getter():
-                execution((cur_time - last_time) * time_scale.getter() / Time_Factor(File_Name))    # Уменьшаем максимальную скорость симуляции для
-                text = "%d seconds passed" % (int(model_time.getter()))                             # двойной звезды
-                timer.set_text(text)
-
-            last_time = cur_time
-            drawer.update(space_objects.getter(), box)
-            time.sleep(1.0 / 60)
+        last_time = cur_time
+        drawer.update(space_objects.getter(), box)
+        time.sleep(1.0 / 60)
 
     if File_Name.getter() == "systems/one_satellite.txt":  # Выводим графики только для одиночного спутника
         stats.V_t_plot(t_list, Vxp_list, Vyp_list)
