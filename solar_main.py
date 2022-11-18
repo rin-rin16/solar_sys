@@ -1,11 +1,12 @@
 # coding: utf-8
 # license: GPLv3
 
-from source_code.solar_vis import *
-from source_code.solar_model import *
-from source_code.solar_input import *
-from source_code.solar_stats import *
-import thorpy
+import source_code.solar_vis as vis
+import source_code.solar_model as model
+import source_code.solar_input as input
+import source_code.solar_stats as stats
+import numpy as np
+import thorpy as thorpy
 import time
 
 class NumVariables:
@@ -78,7 +79,7 @@ def execution(delta):
     Цикличность выполнения зависит от значения глобальной переменной perform_execution.
     При perform_execution == True функция запрашивает вызов самой себя по таймеру через от 1 мс до 100 мс.
     """
-    recalculate_space_objects_positions([dr.obj for dr in space_objects.read()], delta)
+    model.recalculate_space_objects_positions([dr.obj for dr in space_objects.read()], delta)
     model_time.adding(delta)
 
 
@@ -107,22 +108,22 @@ def open_file():
     """
     model_time.setting(0)
     in_filename = "systems/one_satellite.txt"
-    space_objects.transform(read_space_objects_data_from_file(in_filename))
+    space_objects.transform(input.read_space_objects_data_from_file(in_filename))
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects.read()])
-    calculate_scale_factor(max_distance)
+    vis.calculate_scale_factor(max_distance)
 
 def write_file():
     """Применяет функцию, выводящую координаты, с выбранными параметрами"""
-    write_space_objects_data_to_file('output.txt', space_objects.read())
+    input.write_space_objects_data_to_file('output.txt', space_objects.read())
 
 def out_stat():
     """Применяет функцию, выводящую статистику, с выбранными параметрами"""
-    output_statistics(t_list, xs_list, ys_list, Vxs_list, Vys_list, xp_list, yp_list, Vxp_list, Vyp_list)
+    stats.output_statistics(t_list, xs_list, ys_list, Vxs_list, Vys_list, xp_list, yp_list, Vxp_list, Vyp_list)
 
 def handle_events(events, menu):
     for event in events:
         menu.react(event)
-        if event.type == pg.QUIT:
+        if event.type == vis.pg.QUIT:
             alive.bullFalse()
 
 def slider_to_real(val):
@@ -175,33 +176,33 @@ def main():
 
     print('Modelling started!')
 
-    pg.init()
+    vis.pg.init()
     
     width = 1000
     height = 900
-    screen = pg.display.set_mode((width, height))
+    screen = vis.pg.display.set_mode((width, height))
     last_time = time.perf_counter()
-    drawer = Drawer(screen)
+    drawer = vis.Drawer(screen)
     menu, box, timer = init_ui(screen)
     perform_execution.bullTrue()
 
     while alive.read():
-        handle_events(pg.event.get(), menu)
+        handle_events(vis.pg.event.get(), menu)
         cur_time = time.perf_counter()
         if perform_execution.read():
             execution((cur_time - last_time) * time_scale.read())
             text = "%d seconds passed" % (int(model_time.read()))
             timer.set_text(text)
-            save_statistics(model_time.read(), t_list, xs_list, ys_list, Vxs_list, Vys_list,
+            stats.save_statistics(model_time.read(), t_list, xs_list, ys_list, Vxs_list, Vys_list,
                             xp_list, yp_list, Vxp_list, Vyp_list, space_objects)
 
         last_time = cur_time
         drawer.update(space_objects.read(), box)
         time.sleep(1.0 / 60)
 
-    V_t_plot(t_list, Vxp_list, Vyp_list)
-    dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list)
-    V_dist_plot(xs_list, ys_list, xp_list, yp_list, Vxp_list, Vyp_list)
+    stats.V_t_plot(t_list, Vxp_list, Vyp_list)
+    stats.dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list)
+    stats.V_dist_plot(xs_list, ys_list, xp_list, yp_list, Vxp_list, Vyp_list)
     print('Modelling finished!')
 
 if __name__ == "__main__":
