@@ -14,13 +14,13 @@ class NumVariables:
     def __init__(self):
         self.count = 0
 
-    def adding(self, arg):
+    def adder(self, arg):
         self.count += arg
 
-    def setting(self, arg):
+    def setter(self, arg):
         self.count = arg
 
-    def read(self):
+    def getter(self):
        return self.count
 
 
@@ -35,7 +35,7 @@ class BullVariables:
     def bullFalse(self):
         self.bull = False
 
-    def read(self):
+    def getter(self):
         return self.bull
 
 
@@ -48,10 +48,10 @@ class ListVariables:
     def transform(self, thelist):
         self.list = thelist
 
-    def appending(self, el):
+    def appender(self, el):
         self.list.append(el)
 
-    def read(self):
+    def getter(self):
         return self.list
 
 
@@ -59,7 +59,7 @@ perform_execution = BullVariables()     # Флаг цикличности вып
 alive = BullVariables()                 # Отвечает за выход из симуляции
 
 time_scale = NumVariables()             # Шаг по времени при моделировании. Тип: float
-time_scale.setting(1000)
+time_scale.setter(1000)
 model_time = NumVariables()             # Физическое время от начала расчёта. Тип: float
 
 space_objects = ListVariables()         # Список космических объектов
@@ -79,8 +79,8 @@ def execution(delta):
     Цикличность выполнения зависит от значения глобальной переменной perform_execution.
     При perform_execution == True функция запрашивает вызов самой себя по таймеру через от 1 мс до 100 мс.
     """
-    model.recalculate_space_objects_positions([dr.obj for dr in space_objects.read()], delta)
-    model_time.adding(delta)
+    model.recalculate_space_objects_positions([dr.obj for dr in space_objects.getter()], delta)
+    model_time.adder(delta)
 
 
 def start_execution():
@@ -106,15 +106,15 @@ def open_file():
     функцию считывания параметров системы небесных тел из данного файла.
     Считанные объекты сохраняются в глобальный список space_objects
     """
-    model_time.setting(0)
+    model_time.setter(0)
     in_filename = "systems/one_satellite.txt"
     space_objects.transform(input.read_space_objects_data_from_file(in_filename))
-    max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects.read()])
+    max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects.getter()])
     vis.calculate_scale_factor(max_distance)
 
 def write_file():
     """Применяет функцию, выводящую координаты, с выбранными параметрами"""
-    input.write_space_objects_data_to_file('output.txt', space_objects.read())
+    input.write_space_objects_data_to_file('output/output.txt', space_objects.getter())
 
 def out_stat():
     """Применяет функцию, выводящую статистику, с выбранными параметрами"""
@@ -130,7 +130,7 @@ def slider_to_real(val):
     return np.exp(5 + val)
 
 def slider_reaction(event):
-    time_scale.setting(slider_to_real(event.el.get_value()))
+    time_scale.setter(slider_to_real(event.el.get_value()))
 
 def init_ui(screen):
     slider = thorpy.SliderX(100, (-10, 10), "Simulation speed")
@@ -186,18 +186,18 @@ def main():
     menu, box, timer = init_ui(screen)
     perform_execution.bullTrue()
 
-    while alive.read():
+    while alive.getter():
         handle_events(vis.pg.event.get(), menu)
         cur_time = time.perf_counter()
-        if perform_execution.read():
-            execution((cur_time - last_time) * time_scale.read())
-            text = "%d seconds passed" % (int(model_time.read()))
+        if perform_execution.getter():
+            execution((cur_time - last_time) * time_scale.getter())
+            text = "%d seconds passed" % (int(model_time.getter()))
             timer.set_text(text)
-            stats.save_statistics(model_time.read(), t_list, xs_list, ys_list, Vxs_list, Vys_list,
+            stats.save_statistics(model_time.getter(), t_list, xs_list, ys_list, Vxs_list, Vys_list,
                             xp_list, yp_list, Vxp_list, Vyp_list, space_objects)
 
         last_time = cur_time
-        drawer.update(space_objects.read(), box)
+        drawer.update(space_objects.getter(), box)
         time.sleep(1.0 / 60)
 
     stats.V_t_plot(t_list, Vxp_list, Vyp_list)
