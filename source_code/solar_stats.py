@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 def save_statistics(time, t_list, xs_list, ys_list, Vxs_list,
                     Vys_list, xp_list, yp_list, Vxp_list, Vyp_list, space_objects):
@@ -29,19 +30,12 @@ def output_statistics(t_list, xs_list, ys_list, Vxs_list, Vys_list, xp_list, yp_
 
     Все списки, содержащие статистику
     """
-    with open("output/stats.txt", "w") as stat_file:
-        print("Время: ", t_list.getter(), "\n\n\n"                                 
-              "Звезда: \n\n",
-              "X: ", xs_list.getter(), "\n\n",
-              "Y: ", ys_list.getter(), "\n\n",
-              "Vx: ", Vxs_list.getter(), "\n\n",
-              "Vy: ", Vys_list.getter(), "\n\n\n"
-              "Планета: \n\n",
-              "X: ", xp_list.getter(), "\n\n",
-              "Y: ", yp_list.getter(), "\n\n",
-              "Vx: ", Vxp_list.getter(), "\n\n",
-              "Vy: ", Vyp_list.getter(),
-              file=stat_file)
+    data = {"Time" : t_list.getter(), "Star: X" : xs_list.getter(), "Star: Y" : ys_list.getter(),
+            "Star: Vx" : Vxs_list.getter(), "Star: Vy" : Vys_list.getter(),
+            "Planet: X" : xp_list.getter(), "Planet: Y" : yp_list.getter(),
+            "Planet: Vx" : Vxp_list.getter(), "Planet: Vy" : Vyp_list.getter()}
+
+    pd.DataFrame(data).to_csv("output/system_stats.csv", index=False)
 
 def V_t_plot(t_list, Vxp_list, Vyp_list):
     V_list = []

@@ -203,6 +203,8 @@ def main():
     stats.V_t_plot(t_list, Vxp_list, Vyp_list)
     stats.dist_t_plot(t_list, xs_list, ys_list, xp_list, yp_list)
     stats.V_dist_plot(xs_list, ys_list, xp_list, yp_list, Vxp_list, Vyp_list)
+    with open("output/system_stats.csv", "r") as st_f:
+        print(st_f.read())
     print('Modelling finished!')
 
 if __name__ == "__main__":
