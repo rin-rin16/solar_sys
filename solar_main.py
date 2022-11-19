@@ -173,11 +173,13 @@ def slider_reaction(event):
     time_scale.setter(slider_to_real(event.el.get_value()))
 
 def start_ui(screen):
+    text = thorpy.OneLineText("Choose system to model")
     button_solar_sys = thorpy.make_button("Solar system", func=sol_sys_init)
     button_double_star = thorpy.make_button("Double star", func=double_star_init)
     button_one_sattelite = thorpy.make_button("One satellite", func=one_sat_init)
 
     box = thorpy.Box(elements=[
+        text,
         button_solar_sys,
         button_double_star,
         button_one_sattelite])
@@ -186,7 +188,7 @@ def start_ui(screen):
     for element in menu.get_population():
         element.surface = screen
 
-    box.set_topleft((vis.window_width//2 - 25, vis.window_height//2 - 225))
+    box.set_topleft((vis.window_width//2 - 35, vis.window_height//2 - 225))
     box.blit()
     box.update()
     return menu, box
@@ -259,6 +261,8 @@ def main():
     while perform_execution.getter():
         handle_events(vis.pg.event.get(), menu)
         drawer.update(space_objects.getter(), box)
+        if not alive.getter():
+            break
 
     last_time = time.perf_counter()
     drawer = vis.Drawer(screen)
