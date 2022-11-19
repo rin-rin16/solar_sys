@@ -213,13 +213,14 @@ def init_ui(screen):
             button_write,
             button_statistics,
             timer])
-    else:                               # Убирает из меню не работающие кнопки для систем, не являющихся одиночным спутником
+    else:                               # Убирает из меню не работающую кнопку для систем, не являющихся одиночным спутником
         box = thorpy.Box(elements=[
             slider,
             button_pause,
             button_stop,
             button_play,
             button_load,
+            button_write,
             timer])
 
     reaction1 = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
